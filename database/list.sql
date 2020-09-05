@@ -1,0 +1,2 @@
+CREATE DATABASE list;
+CREATE TABLE items (item VARCHAR(20));
