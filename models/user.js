@@ -22,7 +22,7 @@ class User {
 
   static getAll() {
       return new Promise((resolve, reject) => {
-        mysqlConnetion.query("SELECT * from items", (err, rows, fields) => {
+        mysqlConnetion.query("SELECT * from users", (err, rows, fields) => {
                 if (!err) {
                     resolve(rows);
                 }

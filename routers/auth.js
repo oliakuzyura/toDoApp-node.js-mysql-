@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const config = require("../config");
+
 const busboyBodyParser = require('busboy-body-parser');
 const bodyParser = require('body-parser');
 const user = require('../models/user');
@@ -10,7 +10,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const serverSalt = config.salt;
+
 // function sha512(password, salt) {
 //     const hash = crypto.createHmac('sha512', salt);
 //     hash.update(password);
@@ -37,22 +37,19 @@ router.use(passport.initialize());
 router.use(passport.session());
 passport.serializeUser(function (user, done) {
     // наприклад, зберегти у Cookie сесії id користувача
-    done(null, user._id);
+    done(null, user);
 });
 
 // отримує інформацію (id) із Cookie сесії і шукає користувача, що їй відповідає
-passport.deserializeUser(function (id, done) {
-    user.getById(id)
-        .then(user => done(null, user))
-        .catch(err => done(err, null));
-    // отримати користувача по id і викликати done(null, user);
-    // при помилці викликати done(err, null)
-});
+passport.deserializeUser(function(user, done) {
+    done(null, user);
+  });
 // налаштування стратегії для визначення користувача, що виконує логін
 // на основі його username та password
 passport.use(new LocalStrategy((username, password, done) => {
     user.getAll()
         .then(users => {
+            console.log(users);
             let user1;
             for (let i = 0; i < users.length; i++) {
                 if (username == users[i].username && users[i].password == password) {
@@ -65,27 +62,27 @@ passport.use(new LocalStrategy((username, password, done) => {
         .catch(err => done(err, null));
 
 }));
-router.get("/auth/checkUsername", (req, res) => {
-    //console.log(req.query.username);
+// router.get("/checkUsername", (req, res) => {
+//     //console.log(req.query.username);
     
-    user.findByLogin(req.query.username)
-        .then(user => {
-            if(!user)
-            {
-                res.status(200).json({});
-            }
-            else{
-                res.status(409).json({});
-            }
-        })
-        .catch(err => res.status(404).json({}));
-});
+//     user.findByLogin(req.query.username)
+//         .then(user => {
+//             if(!user)
+//             {
+//                 res.status(200).json({});
+//             }
+//             else{
+//                 res.status(409).json({});
+//             }
+//         })
+//         .catch(err => res.status(404).json({}));
+// });
 router.get('/login', function (req, res) {
     res.render('login');
 });
-router.post('/login', passport.authenticate('local', { failureRedirect: '/auth/login' }), function (req, res) {
-    if (req.user.role == "admin") isadmin = true;
-    else isadmin = false; res.render('index', { user: req.user, isadmin: isadmin });
+router.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), function (req, res) {
+    console.log(req.user);
+    res.render('index');
 });
 // router.get('/auth/logout', function (req, res) {
 //     req.logout();
