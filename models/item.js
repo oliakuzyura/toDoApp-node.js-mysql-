@@ -57,5 +57,9 @@ class Item {
         });
     })
   }
+
+  static console(){
+    console.log('Olga');
+  }
 }
 module.exports = Item;
