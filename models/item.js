@@ -5,8 +5,20 @@ class Item {
     this.name = name;
   }
 
-  static insert(new_item) {
-    return new Promise((resolve, reject) => {
+  static insert(new_item, username) {
+    if(username){
+      return new Promise((resolve, reject) => {
+        mysqlConnetion.query(`INSERT INTO items(name, username) VALUES('${new_item}', '${username}')`, (err) => {
+                if (!err) {
+                    resolve(true);
+                }
+                else {
+                    reject(false);
+                }
+        });
+    })
+    }else{
+      return new Promise((resolve, reject) => {
         mysqlConnetion.query(`INSERT INTO items(name) VALUES('${new_item}')`, (err) => {
                 if (!err) {
                     resolve(true);
@@ -16,6 +28,8 @@ class Item {
                 }
         });
     })
+    }
+
   }
 
   static getAll() {
@@ -30,6 +44,19 @@ class Item {
         });
     })
         
+  }
+
+  static getAllUserItems(username) {
+    return new Promise((resolve, reject) => {
+      mysqlConnetion.query(`SELECT * from items WHERE username='${username}'`, (err, rows, fields) => {
+              if (!err) {
+                  resolve(rows);
+              }
+              else {
+                  reject(err);
+              }
+      });
+   })
   }
 
   static update(id, Item) {
@@ -56,10 +83,6 @@ class Item {
                 }
         });
     })
-  }
-
-  static console(){
-    console.log('Olga');
   }
 }
 module.exports = Item;

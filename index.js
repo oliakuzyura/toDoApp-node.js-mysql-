@@ -24,11 +24,18 @@ app.use("/", routersAuth);
 
 app.get("/", (req, res) => {
 
+  if(req.user){
+    item.getAllUserItems(req.user.username).then(items => {
+      res.render('index', {items, user: req.user.username})
+    })
+  }else{
     item.getAll().then(items => {
-      res.render('index', {items});
-    });
+      res.render('index', {items})
+    })
+  }
+
   
-});
+  });
 
 app.get("/register", (req, res) => {
     res.render('register');
@@ -51,7 +58,8 @@ app.post("/register", (req, res) => {
 });
 
 app.post('/insertToDB', function(req, res) {
-  item.insert(req.body.name).then(items => res.redirect('/'));
+  console.log(req.body.username);
+  item.insert(req.body.name, req.body.username).then(items => res.redirect('/'));
 });
 
 app.post('/deleteFromDB', function(req, res){

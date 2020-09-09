@@ -11,11 +11,22 @@
     ></script>
 </head>
 <body>
+
 <h1>My toDo List</h1>
 <form action="/insertToDB" method="POST">
+    <input type="hidden" name="username" value="{{user}}">
     <input name="name" id="name" type="text" value="" placeholder="itemToDo"/>
 </form>
 <i id="advice">Tap on item to edit and then enter.</i>
+{{^user}}
+     <a href="/login"">Login</a>
+{{/user}}
+{{^user}}
+     <a href="/register"">Register</a>
+{{/user}}
+{{#user}}
+<h4>Hello {{user}}</h4>
+{{/user}}
 {{#items}}
    <div class="itemLocation">
    <form action="/updateInDB" method="POST">
@@ -31,6 +42,7 @@
     
    </div>  
 {{/items}}
+
 <script>
         function changeStyle(id){
               console.log('I am here', id)
