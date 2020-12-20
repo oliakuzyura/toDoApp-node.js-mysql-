@@ -34,20 +34,6 @@ class User {
         
   }
 
-  static getAllUserItems(username) {
-    return new Promise((resolve, reject) => {
-      mysqlConnetion.query(`SELECT * from items WHERE username='${username}'`, (err, rows, fields) => {
-              if (!err) {
-                  resolve(rows);
-              }
-              else {
-                  reject(err);
-              }
-      });
-  })
-      
-}
-
 
   static update(id, Item) {
     return new Promise((resolve, reject) => {

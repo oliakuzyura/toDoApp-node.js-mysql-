@@ -1,8 +1,11 @@
 const mysqlConnetion = require("../connection");
 
 class Item {
-  constructor(name) {
+  constructor(name, username, id) {
     this.name = name;
+    this.username = username;
+    this.id = id;
+
   }
 
   static insert(new_item, username) {

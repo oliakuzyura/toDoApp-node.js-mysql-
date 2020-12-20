@@ -1,2 +1,1 @@
-CREATE DATABASE list;
-CREATE TABLE items (item VARCHAR(20));
+SELECT * FROM list.items;
